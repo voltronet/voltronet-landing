@@ -8,7 +8,7 @@ TARGET_URL="${1:-http://localhost:8088}"
 FAILED=0
 
 echo "=================================================="
-echo "🧪 [VOLTRONET] Running Smoke Tests & Security Headers Check"
+echo "🧪 [VOLTRONET] Running Comprehensive Smoke & Asset Tests"
 echo "=================================================="
 
 # Funcție helper pentru testare endpoint-uri (status HTTP)
@@ -31,25 +31,20 @@ test_endpoint() {
     fi
 }
 
-# Funcție helper pentru verificarea avansată a headerelor (Cache, Gzip & Securitate)
+# Funcție helper pentru validarea avansată a paginii principale (HTML)
 test_security_and_headers() {
     local path="$1"
     local expected_cache="$2"
-    local check_gzip="$3"
-    local desc="$4"
+    local desc="$3"
     local full_url="${TARGET_URL}${path}"
 
-    echo -n "Validating Headers & Security [${desc}] ... "
+    echo -n "Validating HTML Headers & Security [${desc}] ... "
 
-    # Preia toate antetele de răspuns trimițând Accept-Encoding: gzip
     local headers
-    headers=$(curl -s -I -H "Accept-Encoding: gzip" "${full_url}")
+    headers=$(curl -s -I "${full_url}")
 
     local cache_control
     cache_control=$(echo "$headers" | grep -i "Cache-Control" | tr -d '\r')
-
-    local content_encoding
-    content_encoding=$(echo "$headers" | grep -i "Content-Encoding" | tr -d '\r')
 
     local x_frame
     x_frame=$(echo "$headers" | grep -i "X-Frame-Options" | tr -d '\r')
@@ -59,22 +54,14 @@ test_security_and_headers() {
 
     local local_fail=0
 
-    # 1. Verificare Cache-Control
     if [[ ! "$cache_control" == *"$expected_cache"* ]]; then
         local_fail=1
     fi
 
-    # 2. Verificare Gzip (opțional)
-    if [ "$check_gzip" = true ] && [[ ! "$content_encoding" == *"gzip"* ]]; then
-        local_fail=1
-    fi
-
-    # 3. Verificare X-Frame-Options (Trebuie să conțină SAMEORIGIN)
     if [[ ! "$x_frame" == *"SAMEORIGIN"* ]]; then
         local_fail=1
     fi
 
-    # 4. Verificare CSP (Trebuie să conțină politica definită)
     if [[ ! "$csp" == *"default-src"* ]]; then
         local_fail=1
     fi
@@ -90,20 +77,70 @@ test_security_and_headers() {
     fi
 }
 
+# Funcție helper specifică pentru resurse statice (/assets/css sau /assets/js)
+test_asset_file() {
+    local path="$1"
+    local desc="$2"
+    local full_url="${TARGET_URL}${path}"
+
+    echo -n "Validating Asset File [${desc}] (${path}) ... "
+
+    local headers
+    headers=$(curl -s -I -H "Accept-Encoding: gzip" "${full_url}")
+
+    local status
+    status=$(curl -s -o /dev/null -w "%{http_code}" "${full_url}")
+
+    local cache_control
+    cache_control=$(echo "$headers" | grep -i "Cache-Control" | tr -d '\r')
+
+    local content_encoding
+    content_encoding=$(echo "$headers" | grep -i "Content-Encoding" | tr -d '\r')
+
+    local local_fail=0
+
+    # 1. Statusul trebuie să fie 200 OK
+    if [ "${status}" -ne 200 ]; then
+        local_fail=1
+    fi
+
+    # 2. Cache-ul trebuie să fie imuabil (public, immutable)
+    if [[ ! "$cache_control" == *"public"* ]] || [[ ! "$cache_control" == *"immutable"* ]]; then
+        local_fail=1
+    fi
+
+    # 3. Compresia Gzip trebuie să fie activă pentru CSS/JS
+    if [[ ! "$content_encoding" == *"gzip"* ]]; then
+        local_fail=1
+    fi
+
+    if [ $local_fail -eq 0 ]; then
+        echo -e "\e[32m[PASS]\e[0m (Status 200 | Immutable Cache: OK | Gzip: OK)"
+    else
+        echo -e "\e[31m[FAIL]\e[0m"
+        echo "   -> Status (Expected: 200) | Got: ${status}"
+        echo "   -> Cache-Control (Expected: public, immutable) | Got: $cache_control"
+        echo "   -> Content-Encoding (Expected: gzip) | Got: $content_encoding"
+        FAILED=$((FAILED + 1))
+    fi
+}
+
 # --- RULARE TESTE ---
 
-# 1. Testează disponibilitatea paginii principale (HTTP 200)
+# 1. Testează rute de bază HTTP
 test_endpoint "/" 200 "Homepage Root"
+test_security_and_headers "/" "no-cache" "Homepage Security & Cache Policy"
 
-# 2. Validează headerele de cache, gzip și securitate pe pagina principală
-test_security_and_headers "/" "no-cache" false "Homepage Security & Cache Policy"
+# 2. Testează explicit fișierele statice din /assets
+test_asset_file "/assets/css/main.css" "CSS Stylesheet Asset"
+test_asset_file "/assets/js/app.js" "JavaScript Localization Asset"
 
-# 3. Testează un fișier inexistent (Trebuie să returneze HTTP 404)
+# 3. Testează o rută inexistentă (404)
 test_endpoint "/fisier-inexistent-12345.html" 404 "Non-existent Route 404"
 
 echo "=================================================="
 if [ ${FAILED} -eq 0 ]; then
-    echo -e "\e[32m✨ All smoke & security tests passed successfully!\e[0m"
+    echo -e "\e[32m✨ All smoke, asset & security tests passed successfully!\e[0m"
     exit 0
 else
     echo -e "\e[31m❌ ${FAILED} test(s) failed.\e[0m"

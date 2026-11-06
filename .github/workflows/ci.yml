@@ -1,4 +1,4 @@
-name: VOLTRONET CI/CD Pipeline
+name: VOLTRONET CI/CD & Docker Hub
 
 on:
   push:
@@ -7,41 +7,59 @@ on:
     branches: [ "main", "master" ]
 
 jobs:
-  build-and-test:
+  build-test-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      # Pasul 1: Descarcă codul sursă din repository
+      # 1. Descarcă codul sursă
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Pasul 2: Setează mediul Docker Buildx pentru build-uri avansate
+      # 2. Setează Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Pasul 3: Construiește imaginea Docker local în runner
-      - name: Build Docker Image
+      # 3. Autentificare pe Docker Hub folosind variabila de user și token-ul secret
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      # 4. Construiește imaginea local pentru teste
+      - name: Build Docker Image Locally
         run: |
           docker build -t voltronet-local:latest .
 
-      # Pasul 4: Pornește containerul Nginx pentru testare pe portul 8088
+      # 5. Pornește containerul Nginx pentru testare
       - name: Run Docker Container
         run: |
           docker run -d --name voltronet-web -p 8088:80 voltronet-local:latest
 
-      # Pasul 5: Așteaptă câteva secunde ca Nginx să pornească complet
+      # 6. Așteaptă pornirea serviciului
       - name: Wait for Nginx to start
         run: sleep 3
 
-      # Pasul 6: Setează permisiunile și rulează scriptul tău de teste smoke
-      - name: Run Smoke Tests & Security Check
+      # 7. Rulează testele smoke extinse (inclusiv CSS, JS, Gzip și Securitate)
+      - name: Run Comprehensive Smoke & Asset Tests
         run: |
           chmod +x smoke-test.sh
           ./smoke-test.sh http://localhost:8088
 
-      # Pasul 7: Curăță containerul după finalizarea testelor (opțional, dar recomandat)
-      - name: Cleanup Container
+      # 8. Curăță containerul de test
+      - name: Cleanup Test Container
         if: always()
         run: |
           docker stop voltronet-web || true
           docker rm voltronet-web || true
+
+      # 9. Construiește și trimite (Push) imaginea pe Docker Hub (doar la push pe main/master)
+      - name: Build and Push to Docker Hub
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ vars.DOCKER_HUB_USERNAME }}/voltronet:latest
+            ${{ vars.DOCKER_HUB_USERNAME }}/voltronet:${{ github.sha }}
