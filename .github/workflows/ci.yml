@@ -1,4 +1,4 @@
-name: VOLTRONET Static CI & GitHub Pages Deploy
+name: VOLTRONET GitHub Pages Deploy
 
 on:
   push:
@@ -6,13 +6,11 @@ on:
   pull_request:
     branches: [ "main", "master" ]
 
-# Permisiuni necesare pentru a scrie pe GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Sincronizare pentru a preveni rulări multiple concurente
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -20,17 +18,13 @@ concurrency:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. Descarcă codul sursă
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 2. Rulează testele locale (smoke-test) dacă dorești să validezi integritatea
       - name: Run Comprehensive Smoke & Asset Tests
         run: |
           chmod +x smoke-test.sh
-          # Dacă ai nevoie de serverul de test pentru smoke-test local:
           docker build -t voltronet-local:latest .
           docker run -d --name voltronet-web -p 8088:80 voltronet-local:latest
           sleep 3
@@ -38,11 +32,9 @@ jobs:
           docker stop voltronet-web || true
           docker rm voltronet-web || true
 
-      # 3. Configurează mediul GitHub Pages
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      # 4. Împachetează conținutul static din folderul curent ca artifact
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
@@ -56,7 +48,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      # 5. Trimite artifactul direct pe GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
