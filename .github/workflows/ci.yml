@@ -1,4 +1,4 @@
-name: VOLTRONET CI/CD & Docker Hub
+name: VOLTRONET Static CI & GitHub Pages Deploy
 
 on:
   push:
@@ -6,8 +6,19 @@ on:
   pull_request:
     branches: [ "main", "master" ]
 
+# Permisiuni necesare pentru a scrie pe GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Sincronizare pentru a preveni rulări multiple concurente
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
-  build-test-and-push:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,51 +26,37 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 2. Setează Docker Buildx
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      # 3. Autentificare pe Docker Hub folosind variabila de user și token-ul secret
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ vars.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
-      # 4. Construiește imaginea local pentru teste
-      - name: Build Docker Image Locally
-        run: |
-          docker build -t voltronet-local:latest .
-
-      # 5. Pornește containerul Nginx pentru testare
-      - name: Run Docker Container
-        run: |
-          docker run -d --name voltronet-web -p 8088:80 voltronet-local:latest
-
-      # 6. Așteaptă pornirea serviciului
-      - name: Wait for Nginx to start
-        run: sleep 3
-
-      # 7. Rulează testele smoke extinse (inclusiv CSS, JS, Gzip și Securitate)
+      # 2. Rulează testele locale (smoke-test) dacă dorești să validezi integritatea
       - name: Run Comprehensive Smoke & Asset Tests
         run: |
           chmod +x smoke-test.sh
+          # Dacă ai nevoie de serverul de test pentru smoke-test local:
+          docker build -t voltronet-local:latest .
+          docker run -d --name voltronet-web -p 8088:80 voltronet-local:latest
+          sleep 3
           ./smoke-test.sh http://localhost:8088
-
-      # 8. Curăță containerul de test
-      - name: Cleanup Test Container
-        if: always()
-        run: |
           docker stop voltronet-web || true
           docker rm voltronet-web || true
 
-      # 9. Construiește și trimite (Push) imaginea pe Docker Hub (doar la push pe main/master)
-      - name: Build and Push to Docker Hub
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-        uses: docker/build-push-action@v5
+      # 3. Configurează mediul GitHub Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      # 4. Împachetează conținutul static din folderul curent ca artifact
+      - name: Upload artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v3
         with:
-          context: .
-          push: true
-          tags: |
-            ${{ vars.DOCKER_HUB_USERNAME }}/voltronet:latest
-            ${{ vars.DOCKER_HUB_USERNAME }}/voltronet:${{ github.sha }}
+          path: '.'
+
+  deploy:
+    needs: build-and-test
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # 5. Trimite artifactul direct pe GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
