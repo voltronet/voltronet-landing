@@ -1,0 +1,76 @@
+/* ==========================================================
+   VOLTRONET - Advanced Glassmorphism & Custom Effects
+   ========================================================== */
+
+/* Efect de sticlă matifiată avansat cu reflexie subtilă */
+.glass-panel {
+    background: rgba(13, 19, 38, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+/* Carduri interactive cu efect de ridicare și strălucire la hover */
+.glass-card {
+    background: rgba(19, 27, 54, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+    border-color: rgba(0, 242, 254, 0.4);
+    box-shadow: 0 15px 35px -10px rgba(0, 242, 254, 0.18);
+    transform: translateY(-5px);
+}
+
+/* Text cu gradient neon vibrant */
+.gradient-text {
+    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #00c6ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Buton cu chenar gradient animat */
+.gradient-border-btn {
+    position: relative;
+    border-radius: 0.5rem;
+    background: linear-gradient(135deg, #00f2fe, #7928ca);
+    padding: 1px;
+    transition: transform 0.3s ease;
+}
+
+.gradient-border-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+}
+
+.gradient-border-btn-inner {
+    background: #070a14;
+    border-radius: inherit;
+    transition: background 0.2s ease;
+}
+
+.gradient-border-btn:hover .gradient-border-btn-inner {
+    background: rgba(7, 10, 20, 0.85);
+}
+
+/* Stiluri personalizate pentru scrollbar (temă dark-tech) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #070a14;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1e2a4a;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00f2fe;
+}
