@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="ro" class="dark scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOLTRONET — Enterprise Cloud Infrastructure & DevOps Engineering</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#070a14',
+                            surface: '#0d1326',
+                            card: '#131b36',
+                            border: '#1e2a4a',
+                            cyan: '#00f2fe',
+                            blue: '#4facfe',
+                            purple: '#7928ca',
+                        }
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 4s infinite alternate',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%': { opacity: '0.3', transform: 'scale(1)' },
+                            '100%': { opacity: '0.6', transform: 'scale(1.05)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-12px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .glass-panel {
+            background: rgba(13, 19, 38, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .glass-card {
+            background: rgba(19, 27, 54, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 242, 254, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(0, 242, 254, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #00c6ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-border-btn {
+            position: relative;
+            border-radius: 0.5rem;
+            background: linear-gradient(135deg, #00f2fe, #7928ca);
+            padding: 1px;
+        }
+
+        .gradient-border-btn-inner {
+            background: #070a14;
+            border-radius: inherit;
+            transition: background 0.2s ease;
+        }
+
+        .gradient-border-btn:hover .gradient-border-btn-inner {
+            background: rgba(7, 10, 20, 0.85);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #070a14;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1e2a4a;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f2fe;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-brand-dark text-slate-200 font-sans selection:bg-brand-cyan selection:text-brand-dark antialiased overflow-x-hidden">
+
+    <!-- Ambient Glow Background Elements -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-cyan-500/15 rounded-full blur-[120px] animate-pulse-glow">
+        </div>
+        <div class="absolute top-1/3 -right-40 w-[30rem] h-[30rem] bg-indigo-600/15 rounded-full blur-[140px] animate-pulse-glow"
+            style="animation-delay: 2s;"></div>
+        <div class="absolute -bottom-40 left-1/3 w-[28rem] h-[28rem] bg-blue-600/15 rounded-full blur-[130px] animate-pulse-glow"
+            style="animation-delay: 4s;"></div>
+        <div
+            class="absolute inset-0 bg-[linear-gradient(to_right,#1f293d0d_1px,transparent_1px),linear-gradient(to_bottom,#1f293d0d_1px,transparent_1px)] bg-[size:4rem_4rem]">
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-3.5 group">
+                <div class="relative w-12 h-11 flex items-center justify-center">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-tr from-cyan-500 via-blue-500 to-indigo-500 rounded-xl opacity-20 blur-sm group-hover:opacity-60 transition-opacity duration-300">
+                    </div>
+                    <div
+                        class="relative w-full h-full bg-brand-surface/80 rounded-xl border border-brand-cyan/30 flex items-center justify-center p-1.5 group-hover:border-brand-cyan transition-colors duration-300">
+                        <svg class="w-full h-full text-brand-cyan drop-shadow-[0_0_8px_rgba(0,242,254,0.4)]"
+                            viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 10,60 L 190,60" stroke="url(#vlt-cyan)" stroke-width="6"
+                                stroke-linecap="round" />
+                            <circle cx="20" cy="60" r="10" fill="#00f2fe" />
+                            <circle cx="20" cy="60" r="5" fill="#070a14" />
+                            <circle cx="180" cy="60" r="10" fill="#4a6572" />
+                            <circle cx="180" cy="60" r="5" fill="#070a14" />
+                            <circle cx="100" cy="40" r="7" fill="#00f2fe" />
+                            <path d="M 50,20 L 100,105 L 125,55 L 110,55 L 100,77 L 65,20 Z" fill="url(#vlt-v-grad)" />
+                            <path
+                                d="M 125,20 L 175,20 L 175,34 L 158,34 L 158,105 L 125,105 L 125,90 L 143,90 L 143,34 L 125,34 Z"
+                                fill="url(#vlt-lt-grad)" />
+                            <defs>
+                                <linearGradient id="vlt-cyan" x1="0" y1="0" x2="200" y2="0"
+                                    gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#00f2fe" />
+                                    <stop offset="0.5" stop-color="#4facfe" />
+                                    <stop offset="1" stop-color="#4a6572" />
+                                </linearGradient>
+                                <linearGradient id="vlt-v-grad" x1="50" y1="20" x2="110" y2="105"
+                                    gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#00f2fe" />
+                                    <stop offset="0.6" stop-color="#0099ff" />
+                                    <stop offset="1" stop-color="#0052d4" />
+                                </linearGradient>
+                                <linearGradient id="vlt-lt-grad" x1="125" y1="20" x2="175" y2="105"
+                                    gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#64748b" />
+                                    <stop offset="1" stop-color="#334155" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-bold tracking-wider text-white font-mono flex items-center">
+                        VOLTRONET<span class="text-brand-cyan">.</span>
+                    </span>
+                    <span class="text-[10px] text-slate-400 font-mono tracking-widest -mt-1 uppercase"
+                        data-i18n="brandSub">Soluții Cloud & DevOps</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#services" class="text-slate-300 hover:text-brand-cyan transition-colors"
+                    data-i18n="navServices">Servicii</a>
+                <a href="#solutions" class="text-slate-300 hover:text-brand-cyan transition-colors"
+                    data-i18n="navSolutions">Soluții & Cazuri</a>
+                <a href="#tech-stack" class="text-slate-300 hover:text-brand-cyan transition-colors"
+                    data-i18n="navTech">Tehnologii</a>
+                <a href="#methodology" class="text-slate-300 hover:text-brand-cyan transition-colors"
+                    data-i18n="navMethod">Metodologie</a>
+                <a href="#contact" class="text-slate-300 hover:text-brand-cyan transition-colors"
+                    data-i18n="navContact">Contact</a>
+            </nav>
+
+            <!-- Actions & Language Switcher -->
+            <div class="hidden sm:flex items-center gap-4">
+                <button id="lang-switch"
+                    class="px-3 py-2 rounded-lg glass-card border border-brand-border text-xs font-mono text-brand-cyan hover:bg-brand-card transition-colors flex items-center gap-1.5"
+                    title="Schimbă limba / Change language">
+                    <i class="fa-solid fa-globe"></i>
+                    <span id="lang-text">EN</span>
+                </button>
+
+                <a href="#contact" class="gradient-border-btn inline-block">
+                    <span
+                        class="gradient-border-btn-inner block px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-check text-brand-cyan"></i>
+                        <span data-i18n="btnConsulting">Programează Consultanță</span>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Mobile menu button -->
+            <button id="mobile-menu-btn" type="button"
+                class="md:hidden p-2 text-slate-400 hover:text-white focus:outline-none" aria-label="Toggle menu">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu"
+            class="hidden md:hidden glass-panel border-b border-brand-border px-4 pt-2 pb-6 space-y-3">
+            <a href="#services"
+                class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-brand-card"
+                data-i18n="navServices">Servicii</a>
+            <a href="#solutions"
+                class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-brand-card"
+                data-i18n="navSolutions">Soluții & Cazuri</a>
+            <a href="#tech-stack"
+                class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-brand-card"
+                data-i18n="navTech">Tehnologii</a>
+            <a href="#methodology"
+                class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-brand-card"
+                data-i18n="navMethod">Metodologie</a>
+            <a href="#contact"
+                class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-brand-card"
+                data-i18n="navContact">Contact</a>
+            <div class="pt-2 flex items-center justify-between gap-3">
+                <button id="lang-switch-mob"
+                    class="w-1/3 py-2.5 rounded-lg glass-card border border-brand-border text-xs font-mono text-brand-cyan flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-globe"></i> <span id="lang-text-mob">EN</span>
+                </button>
+                <a href="#contact"
+                    class="w-2/3 block text-center py-2.5 px-4 rounded-md bg-gradient-to-r from-brand-cyan to-brand-blue text-brand-dark font-bold text-sm"
+                    data-i18n="btnConsulting">
+                    Programează Consultanță
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10">
+
+        <!-- HERO SECTION -->
+        <section class="relative pt-12 pb-20 md:pt-24 md:pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+
+                <div class="lg:col-span-7 space-y-6 text-left">
+                    <div
+                        class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-card border-brand-border text-xs font-mono text-brand-cyan">
+                        <span class="w-2 h-2 rounded-full bg-brand-cyan animate-ping"></span>
+                        <span class="w-2 h-2 rounded-full bg-brand-cyan -ml-4"></span>
+                        <span data-i18n="heroBadge">ENTERPRISE CLOUD ARCHITECTURE & DEVOPS</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.15]"
+                        data-i18n="heroTitle">
+                        Infrastructură Cloud <span class="gradient-text">Fără Compromisuri</span> și Scalabilitate
+                        Nativa.
+                    </h1>
+
+                    <p class="text-lg text-slate-400 font-normal leading-relaxed max-w-2xl" data-i18n="heroSubtitle">
+                        Conectăm stiva ta tehnologică la performanța pe care o cere businessul tău. Soluții
+                        personalizate end-to-end: migrare cloud fără întreruperi, automatizare completă IaC și sisteme
+                        cu disponibilitate ridicată (99.99%).
+                    </p>
+
+                    <div class="flex flex-wrap items-center gap-4 pt-4">
+                        <a href="#contact"
+                            class="px-7 py-3.5 rounded-lg bg-gradient-to-r from-brand-cyan via-brand-blue to-cyan-400 text-brand-dark font-bold text-sm hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2">
+                            <span data-i18n="btnInit">Discută cu un Inginer</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+
+                        <a href="#solutions"
+                            class="px-7 py-3.5 rounded-lg glass-card hover:bg-brand-card text-slate-200 font-semibold text-sm border border-brand-border hover:border-slate-500 transition-all duration-300 flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group text-brand-cyan"></i>
+                            <span data-i18n="btnExplore">Vezi Scenariile Livrate</span>
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-6 pt-8 border-t border-brand-border/60 max-w-xl">
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-bold font-mono text-white">99.99%</div>
+                            <div class="text-xs text-slate-400 mt-1" data-i18n="statUptime">Uptime Garantat</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-bold font-mono text-brand-cyan">Zero</div>
+                            <div class="text-xs text-slate-400 mt-1" data-i18n="statDowntime">Downtime la Deploy</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl sm:text-3xl font-bold font-mono text-white">100%</div>
+                            <div class="text-xs text-slate-400 mt-1" data-i18n="statIac">Control prin Cod (IaC)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terminal Mockup -->
+                <div class="lg:col-span-5">
+                    <div class="relative animate-float">
+                        <div
+                            class="absolute -inset-1 bg-gradient-to-r from-brand-cyan to-brand-purple rounded-2xl blur-lg opacity-30">
+                        </div>
+
+                        <div
+                            class="relative rounded-xl glass-panel border border-brand-border overflow-hidden shadow-2xl">
+                            <div
+                                class="bg-brand-dark/90 px-4 py-3 border-b border-brand-border flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-3 h-3 rounded-full bg-rose-500"></div>
+                                    <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                                    <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                                </div>
+                                <span class="text-xs font-mono text-slate-400">voltronet-terraform-deploy.sh</span>
+                                <div class="text-xs font-mono text-brand-cyan"><i class="fa-solid fa-cloud"></i> AWS /
+                                    K8s</div>
+                            </div>
+
+                            <div
+                                class="p-5 font-mono text-xs text-slate-300 space-y-3 bg-brand-dark/80 min-h-[340px] flex flex-col justify-between">
+                                <div class="space-y-2">
+                                    <p class="text-slate-500" data-i18n="termInit"># Initializing VOLTRONET Cloud
+                                        Architecture Blueprint...</p>
+                                    <p class="text-emerald-400"><span class="text-brand-cyan">voltronet-cli</span> apply
+                                        --environment=production --region=eu-central-1</p>
+
+                                    <div class="text-slate-400 pl-3 border-l-2 border-brand-border space-y-1 my-3">
+                                        <p><span class="text-blue-400">[OK]</span> <span
+                                                data-i18n="termOk1">Provisioning VPC & Subnets (Multi-AZ)...</span></p>
+                                        <p><span class="text-blue-400">[OK]</span> <span data-i18n="termOk2">Deploying
+                                                EKS Cluster with Karpenter Autoscaler...</span></p>
+                                        <p><span class="text-blue-400">[OK]</span> <span data-i18n="termOk3">Configuring
+                                                Vault Secrets Manager & KMS keys...</span></p>
+                                        <p><span class="text-blue-400">[OK]</span> <span data-i18n="termOk4">Enabling
+                                                Datadog APM & CloudWatch Alarms...</span></p>
+                                        <p><span class="text-blue-400">[OK]</span> <span data-i18n="termOk5">Cloudflare
+                                                WAF & Argo Tunnels Attached.</span></p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-brand-card/80 p-3 rounded-lg border border-brand-border/60">
+                                    <div class="flex justify-between items-center text-emerald-400 font-semibold mb-1">
+                                        <span data-i18n="termStatus">Status: INFRASTRUCTURE READY</span>
+                                        <i class="fa-solid fa-circle-check"></i>
+                                    </div>
+                                    <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                                        <div class="bg-gradient-to-r from-brand-cyan to-emerald-400 h-full w-full">
+                                        </div>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400 mt-2" data-i18n="termSub">Zero security flaws
+                                        detected • Standard compliance met</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SERVICES SECTION -->
+        <section id="services" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-brand-border/40">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <h2 class="text-xs font-mono font-semibold text-brand-cyan uppercase tracking-widest"
+                    data-i18n="servTag">Expertiză Tehnică & Business Value</h2>
+                <p class="text-3xl sm:text-4xl font-bold text-white" data-i18n="servTitle">Servicii De Inginerie
+                    Infrastructure & Cloud</p>
+                <p class="text-slate-400 text-base" data-i18n="servDesc">
+                    Construim fundația tehnică de care are nevoie afacerea ta pentru a crește fără limitări, optimizând
+                    costurile și garantând securitatea la nivel enterprise.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                <div class="glass-card rounded-xl p-8 relative overflow-hidden group">
+                    <div
+                        class="w-14 h-14 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-brand-cyan text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brand-cyan transition-colors"
+                        data-i18n="s1Title">
+                        Cloud & Infrastructure Engineering
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6" data-i18n="s1Desc">
+                        Proiectăm și gestionăm infrastructuri Cloud Native scalabile în AWS și GCP. Implementăm
+                        containerizare de nivel enterprise, orchestrare cu Kubernetes și declarative Infrastructure as
+                        Code.
+                    </p>
+                    <ul class="space-y-2 text-xs font-mono text-slate-300 border-t border-brand-border/60 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-cyan"></i> <span
+                                data-i18n="s1Li1">Terraform & Ansible Infrastructure Automation</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-cyan"></i> <span
+                                data-i18n="s1Li2">Container Orchestration (Docker, Kubernetes, Kind)</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-cyan"></i> <span
+                                data-i18n="s1Li3">Multi-Region High Availability & Disaster Recovery</span></li>
+                    </ul>
+                </div>
+
+                <div class="glass-card rounded-xl p-8 relative overflow-hidden group">
+                    <div
+                        class="w-14 h-14 rounded-lg bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-code-merge"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brand-cyan transition-colors"
+                        data-i18n="s2Title">
+                        DevOps Automation & GitOps
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6" data-i18n="s2Desc">
+                        Eliminăm blocajele de livrare software prin pipelines CI/CD automatizate. Implementăm principii
+                        GitOps pentru sincronizarea stării din depozit cu mediul live de producție.
+                    </p>
+                    <ul class="space-y-2 text-xs font-mono text-slate-300 border-t border-brand-border/60 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-cyan"></i> <span
+                                data-i18n="s2Li1">GitHub Actions & Jenkins Automated Pipelines</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-cyan"></i> <span
+                                data-i18n="s2Li2">Continuous Deployment cu FluxCD & ArgoCD</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-cyan"></i> <span
+                                data-i18n="s2Li3">Automated Code Quality & Static Analysis (SonarQube)</span></li>
+                    </ul>
+                </div>
+
+                <div class="glass-card rounded-xl p-8 relative overflow-hidden group">
+                    <div
+                        class="w-14 h-14 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brand-cyan transition-colors"
+                        data-i18n="s3Title">
+                        Observability, APM & Security
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6" data-i18n="s3Desc">
+                        Transformăm metricele și logurile complexe în vizibilitate completă. Protejăm microserviciile și
+                        datele sensibile utilizând management centralizat al secretelor și API Gateways.
+                    </p>
+                    <ul class="space-y-2 text-xs font-mono text-slate-300 border-t border-brand-border/60 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-cyan"></i> <span
+                                data-i18n="s3Li1">Datadog, Prometheus & CloudWatch Telemetry</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-cyan"></i> <span
+                                data-i18n="s3Li2">HashiCorp Vault Secrets Management & KMS</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-cyan"></i> <span
+                                data-i18n="s3Li3">Cloudflare Tunnels, WAF & Kong API Gateway</span></li>
+                    </ul>
+                </div>
+
+                <div class="glass-card rounded-xl p-8 relative overflow-hidden group">
+                    <div
+                        class="w-14 h-14 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 text-2xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-server"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-brand-cyan transition-colors"
+                        data-i18n="s4Title">
+                        Cloud Migration & Modernization
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6" data-i18n="s4Desc">
+                        Transformăm și migrăm aplicațiile moștenite (on-premises) către arhitecturi moderne
+                        cloud-native. Evaluăm infrastructura existentă, refactorizăm workloads și optimizăm costurile.
+                    </p>
+                    <ul class="space-y-2 text-xs font-mono text-slate-300 border-t border-brand-border/60 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-cyan"></i> <span
+                                data-i18n="s4Li1">On-Premises to Multi-Cloud Architecture & Migration</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-cyan"></i> <span
+                                data-i18n="s4Li2">Workload Lift-and-Shift & Cloud Native Refactoring</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-cyan"></i> <span
+                                data-i18n="s4Li3">Performance Optimization & Cost Reduction Tuning</span></li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SOLUTIONS / USE CASES SECTION (Inspired by Enterprise Platforms) -->
+        <section id="solutions" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-brand-border/40">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <h2 class="text-xs font-mono font-semibold text-brand-cyan uppercase tracking-widest"
+                    data-i18n="solTag">Scenarii & Cazuri de Utilizare</h2>
+                <p class="text-3xl sm:text-4xl font-bold text-white" data-i18n="solTitle">Cum Rezolvăm Provocările Tale
+                    Reale</p>
+                <p class="text-slate-400 text-base" data-i18n="solDesc">
+                    Fiecare business are un punct critic în infrastructură. Iată unde intervenim cel mai des pentru a
+                    aduce stabilitate și viteză.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-card p-8 rounded-xl border border-brand-border space-y-4">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-cyan-500/10 text-brand-cyan flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white" data-i18n="uc1Title">Migrări Fără Risc</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed" data-i18n="uc1Desc">
+                        Trecerea de la servere fizice locale (On-Premises) sau alte medii spre Cloud (AWS/GCP) fără
+                        întreruperea activității pentru clienții tăi.
+                    </p>
+                </div>
+
+                <div class="glass-card p-8 rounded-xl border border-brand-border space-y-4">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white" data-i18n="uc2Title">Viteză în Livrare (CI/CD)</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed" data-i18n="uc2Desc">
+                        Reducerea timpului de la scrierea codului până la rularea în producție de la ore la câteva
+                        minute, cu testare automată prin SonarQube și GitOps.
+                    </p>
+                </div>
+
+                <div class="glass-card p-8 rounded-xl border border-brand-border space-y-4">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white" data-i18n="uc3Title">Securitate & Control Total</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed" data-i18n="uc3Desc">
+                        Implementarea politicilor Zero-Trust, management centralizat al secretelor cu Vault și
+                        vizibilitate instantanee prin APM (Datadog).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TECH STACK -->
+        <section id="tech-stack" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-brand-border/40">
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-4">
+                <h2 class="text-xs font-mono font-semibold text-brand-cyan uppercase tracking-widest"
+                    data-i18n="techTag">Ecosistem Tehnologic</h2>
+                <p class="text-3xl sm:text-4xl font-bold text-white" data-i18n="techTitle">Stiva Noastră De Tehnologii
+                </p>
+                <p class="text-slate-400 text-sm" data-i18n="techDesc">Folosim instrumente validate de industrie pentru
+                    a asigura reproductibilitate și scalabilitate.</p>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-2 mb-10" id="tech-tabs">
+                <button
+                    class="tech-tab-btn active px-4 py-2 rounded-lg text-xs font-mono transition-all bg-brand-cyan text-brand-dark font-bold"
+                    data-category="all" data-i18n="tabAll">Toate Tehnologiile</button>
+                <button
+                    class="tech-tab-btn px-4 py-2 rounded-lg text-xs font-mono transition-all glass-card text-slate-300 hover:text-white"
+                    data-category="cloud" data-i18n="tabCloud">Cloud & IaC</button>
+                <button
+                    class="tech-tab-btn px-4 py-2 rounded-lg text-xs font-mono transition-all glass-card text-slate-300 hover:text-white"
+                    data-category="containers" data-i18n="tabContainers">Containerizare & K8s</button>
+                <button
+                    class="tech-tab-btn px-4 py-2 rounded-lg text-xs font-mono transition-all glass-card text-slate-300 hover:text-white"
+                    data-category="cicd" data-i18n="tabCicd">CI/CD & Code Quality</button>
+                <button
+                    class="tech-tab-btn px-4 py-2 rounded-lg text-xs font-mono transition-all glass-card text-slate-300 hover:text-white"
+                    data-category="security" data-i18n="tabSecurity">Observability & Security</button>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4" id="tech-grid">
+                <div class="tech-card glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center gap-3 border border-brand-border hover:border-brand-cyan/50"
+                    data-category="cloud">
+                    <i class="fa-brands fa-aws text-3xl text-amber-400"></i>
+                    <div>
+                        <div class="font-bold text-sm text-white">AWS</div>
+                        <div class="text-[10px] font-mono text-slate-400">ECS, EKS, S3, IAM</div>
+                    </div>
+                </div>
+                <div class="tech-card glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center gap-3 border border-brand-border hover:border-brand-cyan/50"
+                    data-category="cloud">
+                    <i class="fa-brands fa-google text-3xl text-blue-400"></i>
+                    <div>
+                        <div class="font-bold text-sm text-white">GCP</div>
+                        <div class="text-[10px] font-mono text-slate-400">Google Cloud Platform</div>
+                    </div>
+                </div>
+                <div class="tech-card glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center gap-3 border border-brand-border hover:border-brand-cyan/50"
+                    data-category="cloud">
+                    <i class="fa-solid fa-cubes text-3xl text-purple-400"></i>
+                    <div>
+                        <div class="font-bold text-sm text-white">Terraform</div>
+                        <div class="text-[10px] font-mono text-slate-400">Infrastructure as Code</div>
+                    </div>
+                </div>
+                <div class="tech-card glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center gap-3 border border-brand-border hover:border-brand-cyan/50"
+                    data-category="cloud">
+                    <i class="fa-solid fa-terminal text-3xl text-rose-400"></i>
+                    <div>
+                        <div class="font-bold text-sm text-white">Ansible</div>
+                        <div class="text-[10px] font-mono text-slate-400">Config Automation</div>
+                    </div>
+                </div>
+                <div class="tech-card glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center gap-3 border border-brand-border hover:border-brand-cyan/50"
+                    data-category="containers">
+                    <i class="fa-solid fa-dharmachakra text-3xl text-blue-500"></i>
+                    <div>
+                        <div class="font-bold text-sm text-white">Kubernetes</div>
+                        <div class="text-[10px] font-mono text-slate-400">K8s & Kind Orchestration</div>
+                    </div>
+                </div>
+                <div class="tech-card glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center gap-3 border border-brand-border hover:border-brand-cyan/50"
+                    data-category="containers">
+                    <i class="fa-brands fa-docker text-3xl text-cyan-400"></i>
+                    <div>
+                        <div class="font-bold text-sm text-white">Docker</div>
+                        <div class="text-[10px] font-mono text-slate-400">Containerization</div>
+                    </div>
+                </div>
+                <div class="tech-card glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center gap-3 border border-brand-border hover:border-brand-cyan/50"
+                    data-category="cicd">
+                    <i class="fa-brands fa-github text-3xl text-slate-200"></i>
+                    <div>
+                        <div class="font-bold text-sm text-white">GitHub Actions</div>
+                        <div class="text-[10px] font-mono text-slate-400">CI/CD Pipelines</div>
+                    </div>
+                </div>
+                <div class="tech-card glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center gap-3 border border-brand-border hover:border-brand-cyan/50"
+                    data-category="cicd">
+                    <i class="fa-brands fa-jenkins text-3xl text-amber-500"></i>
+                    <div>
+                        <div class="font-bold text-sm text-white">Jenkins</div>
+                        <div class="text-[10px] font-mono text-slate-400">Automation Server</div>
+                    </div>
+                </div>
+                <div class="tech-card glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center gap-3 border border-brand-border hover:border-brand-cyan/50"
+                    data-category="cicd">
+                    <i class="fa-solid fa-diagram-project text-3xl text-cyan-300"></i>
+                    <div>
+                        <div class="font-bold text-sm text-white">FluxCD</div>
+                        <div class="text-[10px] font-mono text-slate-400">GitOps State Sync</div>
+                    </div>
+                </div>
+                <div class="tech-card glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center gap-3 border border-brand-border hover:border-brand-cyan/50"
+                    data-category="cicd">
+                    <i class="fa-solid fa-magnifying-glass-chart text-3xl text-blue-300"></i>
+                    <div>
+                        <div class="font-bold text-sm text-white">SonarQube</div>
+                        <div class="text-[10px] font-mono text-slate-400">Code Quality & Security</div>
+                    </div>
+                </div>
+                <div class="tech-card glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center gap-3 border border-brand-border hover:border-brand-cyan/50"
+                    data-category="security">
+                    <i class="fa-solid fa-dog text-3xl text-purple-400"></i>
+                    <div>
+                        <div class="font-bold text-sm text-white">Datadog</div>
+                        <div class="text-[10px] font-mono text-slate-400">APM & Observability</div>
+                    </div>
+                </div>
+                <div class="tech-card glass-card p-4 rounded-xl flex flex-col items-center justify-center text-center gap-3 border border-brand-border hover:border-brand-cyan/50"
+                    data-category="security">
+                    <i class="fa-solid fa-vault text-3xl text-slate-300"></i>
+                    <div>
+                        <div class="font-bold text-sm text-white">Vault</div>
+                        <div class="text-[10px] font-mono text-slate-400">Secrets Management</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- METHODOLOGY -->
+        <section id="methodology" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-brand-border/40">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 space-y-6">
+                    <h2 class="text-xs font-mono font-semibold text-brand-cyan uppercase tracking-widest"
+                        data-i18n="methTag">Filosofia Noastră</h2>
+                    <h3 class="text-3xl sm:text-4xl font-bold text-white" data-i18n="methTitle">First-Principles
+                        Engineering</h3>
+                    <p class="text-slate-400 text-base leading-relaxed" data-i18n="methDesc">
+                        Nu adoptăm tehnologii doar pentru că sunt la modă. Construim pe principii solide de inginerie
+                        software, unde fiecare componentă a infrastructurii are un rol bine definit și aduce un
+                        beneficiu măsurabil de performanță și cost.
+                    </p>
+                    <div class="p-4 rounded-xl bg-brand-surface border border-brand-border space-y-2">
+                        <div class="text-xs font-mono text-brand-cyan flex items-center gap-2">
+                            <i class="fa-solid fa-code"></i> <span data-i18n="boxTitle">LOCAL SANDBOX & CI
+                                ISOLATION</span>
+                        </div>
+                        <p class="text-xs text-slate-400" data-i18n="boxDesc">Fiecare configurare de infrastructură este
+                            testată în medii izolate (LocalStack / Kind) înainte de a ajunge în staging sau producție.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-card p-6 rounded-xl border border-brand-border space-y-3">
+                        <div
+                            class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">
+                            01</div>
+                        <h4 class="text-lg font-bold text-white" data-i18n="m1Title">Declarative & Reproducible</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed" data-i18n="m1Desc">Nu executăm modificări
+                            manuale în consolele Cloud. Totul este definit ca cod în depozite Git versionate.</p>
+                    </div>
+                    <div class="glass-card p-6 rounded-xl border border-brand-border space-y-3">
+                        <div
+                            class="w-10 h-10 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold">
+                            02</div>
+                        <h4 class="text-lg font-bold text-white" data-i18n="m2Title">Zero-Trust Security</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed" data-i18n="m2Desc">Securitatea este integrată
+                            direct în pipeline (DevSecOps). Acces bazat pe roluri (IAM), inspecție WAF și secrete
+                            criptate.</p>
+                    </div>
+                    <div class="glass-card p-6 rounded-xl border border-brand-border space-y-3">
+                        <div
+                            class="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold">
+                            03</div>
+                        <h4 class="text-lg font-bold text-white" data-i18n="m3Title">Cost-Efficient Scaling</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed" data-i18n="m3Desc">Optimizăm utilizarea
+                            resurselor prin autoscaling inteligent și instanțe alocate dinamic (Spot / Fargate).</p>
+                    </div>
+                    <div class="glass-card p-6 rounded-xl border border-brand-border space-y-3">
+                        <div
+                            class="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold">
+                            04</div>
+                        <h4 class="text-lg font-bold text-white" data-i18n="m4Title">Full Telemetry & APM</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed" data-i18n="m4Desc">Monitorizare proactivă cu
+                            alertare automată înainte ca eventualele anomalii să afecteze utilizatorii finali.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-brand-border/40">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <div class="lg:col-span-5 space-y-8">
+                    <div>
+                        <h2 class="text-xs font-mono font-semibold text-brand-cyan uppercase tracking-widest mb-2"
+                            data-i18n="contTag">Inițiază o Colaborare</h2>
+                        <h3 class="text-3xl sm:text-4xl font-bold text-white" data-i18n="contTitle">Să Discutăm Despre
+                            Proiectul Tău</h3>
+                        <p class="text-slate-400 text-sm mt-4 leading-relaxed" data-i18n="contDesc">
+                            Ai nevoie de o evaluare a infrastructurii actuale sau dorești să migrezi către Cloud native?
+                            Trimite-ne un mesaj și echipa noastră tehnică te va contacta.
+                        </p>
+                    </div>
+
+                    <div class="space-y-4 text-sm font-mono">
+                        <div class="flex items-center gap-4 glass-card p-4 rounded-lg">
+                            <div
+                                class="w-10 h-10 rounded bg-brand-cyan/10 text-brand-cyan flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-slate-400" data-i18n="cEmail">Email Direct</div>
+                                <div class="text-white font-bold">contact@voltronet.ro</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 glass-card p-4 rounded-lg">
+                            <div
+                                class="w-10 h-10 rounded bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-slate-400" data-i18n="cLoc">Locație & Operare</div>
+                                <div class="text-white font-bold" data-i18n="cLocVal">Cluj-Napoca & București, România
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 glass-card p-4 rounded-lg">
+                            <div
+                                class="w-10 h-10 rounded bg-purple-500/10 text-purple-400 flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-network-wired"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-slate-400" data-i18n="cHost">Găzduire & DNS Dynamic</div>
+                                <div class="text-white font-bold">voltronet.go.ro / Enterprise Cloud</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7">
+                    <div class="glass-panel p-8 rounded-2xl border border-brand-border relative">
+                        <form id="contact-form" class="space-y-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-mono text-slate-300 mb-2" for="name"
+                                        data-i18n="fName">Nume Complet *</label>
+                                    <input type="text" id="name" required placeholder="ex: Alexandru Popescu"
+                                        class="w-full bg-brand-dark/80 border border-brand-border rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-cyan transition-colors">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-mono text-slate-300 mb-2" for="email"
+                                        data-i18n="fEmail">Adresă Email *</label>
+                                    <input type="email" id="email" required placeholder="alex@companie.ro"
+                                        class="w-full bg-brand-dark/80 border border-brand-border rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-cyan transition-colors">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-xs font-mono text-slate-300 mb-2" for="project-type"
+                                        data-i18n="fType">Tip Proiect</label>
+                                    <select id="project-type"
+                                        class="w-full bg-brand-dark/80 border border-brand-border rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-cyan transition-colors">
+                                        <option value="cloud-migration" data-i18n="opt1">Cloud Migration (On-Prem to
+                                            AWS/GCP)</option>
+                                        <option value="devops" data-i18n="opt2">DevOps & CI/CD Automation</option>
+                                        <option value="kubernetes" data-i18n="opt3">Kubernetes / Microservices</option>
+                                        <option value="audit" data-i18n="opt4">Audit Security & Observability</option>
+                                        <option value="other" data-i18n="opt5">Altele / Consultanță Generală</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-mono text-slate-300 mb-2" for="budget"
+                                        data-i18n="fTime">Orizont Temporal</label>
+                                    <select id="budget"
+                                        class="w-full bg-brand-dark/80 border border-brand-border rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-cyan transition-colors">
+                                        <option value="immediate" data-i18n="time1">Imediat (&lt; 1 lună)</option>
+                                        <option value="medium" data-i18n="time2">1 - 3 luni</option>
+                                        <option value="planning" data-i18n="time3">Fază de planificare</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono text-slate-300 mb-2" for="message"
+                                    data-i18n="fMsg">Detalii Proiect Sau Cerințe *</label>
+                                <textarea id="message" rows="4" required
+                                    placeholder="Descrie pe scurt stiva tehnică actuală sau obiectivul proiectului..."
+                                    class="w-full bg-brand-dark/80 border border-brand-border rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-cyan transition-colors resize-none"></textarea>
+                            </div>
+                            <button type="submit"
+                                class="w-full py-4 rounded-lg bg-gradient-to-r from-brand-cyan via-brand-blue to-brand-purple text-brand-dark font-extrabold text-sm uppercase tracking-wider hover:opacity-95 transition-opacity shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i> <span data-i18n="fBtn">Trimite
+                                    Solicitarea</span>
+                            </button>
+                            <p class="text-[11px] text-slate-500 text-center font-mono" data-i18n="fNda">Garantăm
+                                confidențialitatea datelor (NDA disponibil la cerere).</p>
+                        </form>
+
+                        <div id="form-feedback"
+                            class="hidden absolute inset-0 bg-brand-surface/95 rounded-2xl flex flex-col items-center justify-center p-8 text-center space-y-4 z-20">
+                            <div
+                                class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-3xl">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <h4 class="text-2xl font-bold text-white" data-i18n="fbTitle">Mesaj Trimis Cu Succes!</h4>
+                            <p class="text-sm text-slate-300 max-w-md" data-i18n="fbDesc">Îți mulțumim pentru interes.
+                                Echipa tehnică VOLTRONET va analiza cerințele și te va contacta în cel mai scurt timp.
+                            </p>
+                            <button id="reset-form-btn"
+                                class="px-6 py-2 rounded-lg bg-brand-card text-xs font-mono text-brand-cyan border border-brand-border hover:bg-brand-border"
+                                data-i18n="fbBtn">Trimite Alt Mesaj</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-brand-border/60 bg-brand-dark py-12 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-8 rounded-lg bg-brand-surface border border-brand-cyan/40 p-1 flex items-center justify-center">
+                        <svg class="w-full h-full" viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 10,60 L 190,60" stroke="url(#vlt-cyan-f)" stroke-width="6"
+                                stroke-linecap="round" />
+                            <circle cx="20" cy="60" r="10" fill="#00f2fe" />
+                            <circle cx="180" cy="60" r="10" fill="#4a6572" />
+                            <circle cx="100" cy="40" r="7" fill="#00f2fe" />
+                            <path d="M 50,20 L 100,105 L 125,55 L 110,55 L 100,77 L 65,20 Z"
+                                fill="url(#vlt-v-grad-f)" />
+                            <path
+                                d="M 125,20 L 175,20 L 175,34 L 158,34 L 158,105 L 125,105 L 125,90 L 143,90 L 143,34 L 125,34 Z"
+                                fill="url(#vlt-lt-grad-f)" />
+                            <defs>
+                                <linearGradient id="vlt-cyan-f" x1="0" y1="0" x2="200" y2="0"
+                                    gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#00f2fe" />
+                                    <stop offset="1" stop-color="#4a6572" />
+                                </linearGradient>
+                                <linearGradient id="vlt-v-grad-f" x1="50" y1="20" x2="110" y2="105"
+                                    gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#00f2fe" />
+                                    <stop offset="1" stop-color="#0052d4" />
+                                </linearGradient>
+                                <linearGradient id="vlt-lt-grad-f" x1="125" y1="20" x2="175" y2="105"
+                                    gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#64748b" />
+                                    <stop offset="1" stop-color="#334155" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-sm font-bold text-white font-mono block">VOLTRONET S.R.L.</span>
+                        <span class="text-[10px] text-slate-400 font-mono" data-i18n="brandSub">Soluții Cloud &
+                            DevOps</span>
+                    </div>
+                </div>
+                <div class="text-center md:text-right text-xs text-slate-500 font-mono space-y-1">
+                    <p data-i18n="ftCopy">© 2026 VOLTRONET. All rights reserved.</p>
+                    <p class="text-[11px]" data-i18n="ftSub">Enterprise Cloud Infrastructure & DevOps Solutions •
+                        România</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT & TRANSLATIONS LOGIC -->
+    <script>
+        const translations = {
+            ro: {
+                brandSub: "Soluții Cloud & DevOps",
+                navServices: "Servicii",
+                navSolutions: "Soluții & Cazuri",
+                navTech: "Tehnologii",
+                navMethod: "Metodologie",
+                navContact: "Contact",
+                btnConsulting: "Programează Consultanță",
+                heroBadge: "ENTERPRISE CLOUD ARCHITECTURE & DEVOPS",
+                heroTitle: "Infrastructură Cloud <span class='gradient-text'>Fără Compromisuri</span> și Scalabilitate Nativa.",
+                heroSubtitle: "Conectăm stiva ta tehnologică la performanța pe care o cere businessul tău. Soluții personalizate end-to-end: migrare cloud fără întreruperi, automatizare completă IaC și sisteme cu disponibilitate ridicată (99.99%).",
+                btnInit: "Discută cu un Inginer",
+                btnExplore: "Vezi Scenariile Livrate",
+                statUptime: "Uptime Garantat",
+                statDowntime: "Downtime la Deploy",
+                statIac: "Control prin Cod (IaC)",
+                termInit: "# Initializing VOLTRONET Cloud Architecture Blueprint...",
+                termOk1: "Provisioning VPC & Subnets (Multi-AZ)...",
+                termOk2: "Deploying EKS Cluster with Karpenter Autoscaler...",
+                termOk3: "Configuring Vault Secrets Manager & KMS keys...",
+                termOk4: "Enabling Datadog APM & CloudWatch Alarms...",
+                termOk5: "Cloudflare WAF & Argo Tunnels Attached.",
+                termStatus: "Status: INFRASTRUCTURE READY",
+                termSub: "Zero security flaws detected • Standard compliance met",
+                servTag: "Expertiză Tehnică & Business Value",
+                servTitle: "Servicii De Inginerie Infrastructure & Cloud",
+                servDesc: "Construim fundația tehnică de care are nevoie afacerea ta pentru a crește fără limitări, optimizând costurile și garantând securitatea la nivel enterprise.",
+                s1Title: "Cloud & Infrastructure Engineering",
+                s1Desc: "Proiectăm și gestionăm infrastructuri Cloud Native scalabile în AWS și GCP. Implementăm containerizare de nivel enterprise, orchestrare cu Kubernetes și declarative Infrastructure as Code.",
+                s1Li1: "Terraform & Ansible Infrastructure Automation",
+                s1Li2: "Container Orchestration (Docker, Kubernetes, Kind)",
+                s1Li3: "Multi-Region High Availability & Disaster Recovery",
+                s2Title: "DevOps Automation & GitOps",
+                s2Desc: "Eliminăm blocajele de livrare software prin pipelines CI/CD automatizate. Implementăm principii GitOps pentru sincronizarea stării din depozit cu mediul live de producție.",
+                s2Li1: "GitHub Actions & Jenkins Automated Pipelines",
+                s2Li2: "Continuous Deployment cu FluxCD & ArgoCD",
+                s2Li3: "Automated Code Quality & Static Analysis (SonarQube)",
+                s3Title: "Observability, APM & Security",
+                s3Desc: "Transformăm metricele și logurile complexe în vizibilitate completă. Protejăm microserviciile și datele sensibile utilizând management centralizat al secretelor și API Gateways.",
+                s3Li1: "Datadog, Prometheus & CloudWatch Telemetry",
+                s3Li2: "HashiCorp Vault Secrets Management & KMS",
+                s3Li3: "Cloudflare Tunnels, WAF & Kong API Gateway",
+                s4Title: "Cloud Migration & Modernization",
+                s4Desc: "Transformăm și migrăm aplicațiile moștenite (on-premises) către arhitecturi moderne cloud-native. Evaluăm infrastructura existentă, refactorizăm workloads și optimizăm costurile.",
+                s4Li1: "On-Premises to Multi-Cloud Architecture & Migration",
+                s4Li2: "Workload Lift-and-Shift & Cloud Native Refactoring",
+                s4Li3: "Performance Optimization & Cost Reduction Tuning",
+                solTag: "Scenarii & Cazuri de Utilizare",
+                solTitle: "Cum Rezolvăm Provocările Tale Reale",
+                solDesc: "Fiecare business are un punct critic în infrastructură. Iată unde intervenim cel mai des pentru a aduce stabilitate și viteză.",
+                uc1Title: "Migrări Fără Risc",
+                uc1Desc: "Trecerea de la servere fizice locale (On-Premises) sau alte medii spre Cloud (AWS/GCP) fără întreruperea activității pentru clienții tăi.",
+                uc2Title: "Viteză în Livrare (CI/CD)",
+                uc2Desc: "Reducerea timpului de la scrierea codului până la rularea în producție de la ore la câteva minute, cu testare automată prin SonarQube și GitOps.",
+                uc3Title: "Securitate & Control Total",
+                uc3Desc: "Implementarea politicilor Zero-Trust, management centralizat al secretelor cu Vault și vizibilitate instantanee prin APM (Datadog).",
+                techTag: "Ecosistem Tehnologic",
+                techTitle: "Stiva Noastră De Tehnologii",
+                techDesc: "Folosim instrumente validate de industrie pentru a asigura reproductibilitate și scalabilitate.",
+                tabAll: "Toate Tehnologiile",
+                tabCloud: "Cloud & IaC",
+                tabContainers: "Containerizare & K8s",
+                tabCicd: "CI/CD & Code Quality",
+                tabSecurity: "Observability & Security",
+                methTag: "Filosofia Noastră",
+                methTitle: "First-Principles Engineering",
+                methDesc: "Nu adoptăm tehnologii doar pentru că sunt la modă. Construim pe principii solide de inginerie software, unde fiecare componentă a infrastructurii are un rol bine definit și aduce un beneficiu măsurabil de performanță și cost.",
+                boxTitle: "LOCAL SANDBOX & CI ISOLATION",
+                boxDesc: "Fiecare configurare de infrastructură este testată în medii izolate (LocalStack / Kind) înainte de a ajunge în staging sau producție.",
+                m1Title: "Declarative & Reproducible",
+                m1Desc: "Nu executăm modificări manuale în consolele Cloud. Totul este definit ca cod în depozite Git versionate.",
+                m2Title: "Zero-Trust Security",
+                m2Desc: "Securitatea este integrată direct în pipeline (DevSecOps). Acces bazat pe roluri (IAM), inspecție WAF și secrete criptate.",
+                m3Title: "Cost-Efficient Scaling",
+                m3Desc: "Optimizăm utilizarea resurselor prin autoscaling inteligent și instanțe alocate dinamic (Spot / Fargate).",
+                m4Title: "Full Telemetry & APM",
+                m4Desc: "Monitorizare proactivă cu alertare automată înainte ca eventualele anomalii să afecteze utilizatorii finali.",
+                contTag: "Inițiază o Colaborare",
+                contTitle: "Să Discutăm Despre Proiectul Tău",
+                contDesc: "Ai nevoie de o evaluare a infrastructurii actuale sau dorești să migrezi către Cloud native? Trimite-ne un mesaj și echipa noastră tehnică te va contacta.",
+                cEmail: "Email Direct",
+                cLoc: "Locație & Operare",
+                cLocVal: "Cluj-Napoca & București, România",
+                cHost: "Găzduire & DNS Dynamic",
+                fName: "Nume Complet *",
+                fEmail: "Adresă Email *",
+                fType: "Tip Proiect",
+                opt1: "Cloud Migration (On-Prem to AWS/GCP)",
+                opt2: "DevOps & CI/CD Automation",
+                opt3: "Kubernetes / Microservices",
+                opt4: "Audit Security & Observability",
+                opt5: "Altele / Consultanță Generală",
+                fTime: "Orizont Temporal",
+                time1: "Imediat (< 1 lună)",
+                time2: "1 - 3 luni",
+                time3: "Fază de planificare",
+                fMsg: "Detalii Proiect Sau Cerințe *",
+                fBtn: "Trimite Solicitarea",
+                fNda: "Garantăm confidențialitatea datelor (NDA disponibil la cerere).",
+                fbTitle: "Mesaj Trimis Cu Succes!",
+                fbDesc: "Îți mulțumim pentru interes. Echipa tehnică VOLTRONET va analiza cerințele și te va contacta în cel mai scurt timp.",
+                fbBtn: "Trimite Alt Mesaj",
+                ftCopy: "© 2026 VOLTRONET. All rights reserved.",
+                ftSub: "Enterprise Cloud Infrastructure & DevOps Solutions • România"
+            },
+            en: {
+                brandSub: "Cloud & DevOps Solutions",
+                navServices: "Services",
+                navSolutions: "Solutions & Use Cases",
+                navTech: "Technologies",
+                navMethod: "Methodology",
+                navContact: "Contact",
+                btnConsulting: "Schedule Consultation",
+                heroBadge: "ENTERPRISE CLOUD ARCHITECTURE & DEVOPS",
+                heroTitle: "Cloud Infrastructure <span class='gradient-text'>Without Compromise</span> & Native Scalability.",
+                heroSubtitle: "Connecting your tech stack to the performance your business demands. End-to-end custom solutions: zero-downtime cloud migration, full IaC automation, and high-availability systems (99.99%).",
+                btnInit: "Talk to an Engineer",
+                btnExplore: "View Delivered Scenarios",
+                statUptime: "Guaranteed Uptime",
+                statDowntime: "Deploy Downtime",
+                statIac: "Code Control (IaC)",
+                termInit: "# Initializing VOLTRONET Cloud Architecture Blueprint...",
+                termOk1: "Provisioning VPC & Subnets (Multi-AZ)...",
+                termOk2: "Deploying EKS Cluster with Karpenter Autoscaler...",
+                termOk3: "Configuring Vault Secrets Manager & KMS keys...",
+                termOk4: "Enabling Datadog APM & CloudWatch Alarms...",
+                termOk5: "Cloudflare WAF & Argo Tunnels Attached.",
+                termStatus: "Status: INFRASTRUCTURE READY",
+                termSub: "Zero security flaws detected • Standard compliance met",
+                servTag: "Technical Expertise & Business Value",
+                servTitle: "Infrastructure & Cloud Engineering Services",
+                servDesc: "Building the technical foundation your business needs to grow without limits, optimizing costs and ensuring enterprise-grade security.",
+                s1Title: "Cloud & Infrastructure Engineering",
+                s1Desc: "Designing and managing scalable Cloud Native infrastructures in AWS and GCP. Implementing enterprise containerization, Kubernetes orchestration, and declarative Infrastructure as Code.",
+                s1Li1: "Terraform & Ansible Infrastructure Automation",
+                s1Li2: "Container Orchestration (Docker, Kubernetes, Kind)",
+                s1Li3: "Multi-Region High Availability & Disaster Recovery",
+                s2Title: "DevOps Automation & GitOps",
+                s2Desc: "Eliminating software delivery bottlenecks through automated CI/CD pipelines. Implementing GitOps principles to synchronize repository state with live production environments.",
+                s2Li1: "GitHub Actions & Jenkins Automated Pipelines",
+                s2Li2: "Continuous Deployment with FluxCD & ArgoCD",
+                s2Li3: "Automated Code Quality & Static Analysis (SonarQube)",
+                s3Title: "Observability, APM & Security",
+                s3Desc: "Turning complex metrics and logs into complete visibility. Securing microservices and sensitive data using centralized secrets management and API Gateways.",
+                s3Li1: "Datadog, Prometheus & CloudWatch Telemetry",
+                s3Li2: "HashiCorp Vault Secrets Management & KMS",
+                s3Li3: "Cloudflare Tunnels, WAF & Kong API Gateway",
+                s4Title: "Cloud Migration & Modernization",
+                s4Desc: "Transforming and migrating legacy (on-premises) applications to modern cloud-native architectures. Assessing existing infrastructure, refactoring workloads, and optimizing costs.",
+                s4Li1: "On-Premises to Multi-Cloud Architecture & Migration",
+                s4Li2: "Workload Lift-and-Shift & Cloud Native Refactoring",
+                s4Li3: "Performance Optimization & Cost Reduction Tuning",
+                solTag: "Scenarios & Use Cases",
+                solTitle: "How We Solve Your Real Challenges",
+                solDesc: "Every business has an infrastructure bottleneck. Here is where we step in most often to deliver stability and velocity.",
+                uc1Title: "Risk-Free Migrations",
+                uc1Desc: "Moving from local physical servers (On-Premises) or other environments to the Cloud (AWS/GCP) with zero business disruption for your end users.",
+                uc2Title: "Delivery Velocity (CI/CD)",
+                uc2Desc: "Cutting deployment times from hours to minutes with automated testing through SonarQube and GitOps synchronization.",
+                uc3Title: "Security & Total Control",
+                uc3Desc: "Implementing Zero-Trust policies, centralized secret management with Vault, and instant visibility via APM (Datadog).",
+                techTag: "Technology Ecosystem",
+                techTitle: "Our Technology Stack",
+                techDesc: "We use industry-validated tools to ensure reproducibility and scalability.",
+                tabAll: "All Technologies",
+                tabCloud: "Cloud & IaC",
+                tabContainers: "Containers & K8s",
+                tabCicd: "CI/CD & Code Quality",
+                tabSecurity: "Observability & Security",
+                methTag: "Our Philosophy",
+                methTitle: "First-Principles Engineering",
+                methDesc: "We don't adopt technologies just because they are trendy. We build on solid software engineering principles, where every infrastructure component has a well-defined role and delivers measurable performance and cost benefits.",
+                boxTitle: "LOCAL SANDBOX & CI ISOLATION",
+                boxDesc: "Every infrastructure configuration is tested in isolated sandboxes (LocalStack / Kind) before reaching staging or production.",
+                m1Title: "Declarative & Reproducible",
+                m1Desc: "No manual changes in Cloud consoles. Everything is defined as code in version-controlled Git repositories.",
+                m2Title: "Zero-Trust Security",
+                m2Desc: "Security is integrated directly into the pipeline (DevSecOps). Role-based access (IAM), WAF inspection, and encrypted secrets.",
+                m3Title: "Cost-Efficient Scaling",
+                m3Desc: "Optimizing resource utilization through intelligent autoscaling and dynamically allocated instances (Spot / Fargate).",
+                m4Title: "Full Telemetry & APM",
+                m4Desc: "Proactive monitoring with automated alerting before anomalies can affect end users.",
+                contTag: "Initiate Collaboration",
+                contTitle: "Let's Discuss Your Project",
+                contDesc: "Need an infrastructure assessment or looking to migrate to Cloud native? Send us a message and our engineering team will get in touch.",
+                cEmail: "Direct Email",
+                cLoc: "Location & Operation",
+                cLocVal: "Cluj-Napoca & Bucharest, Romania",
+                cHost: "Hosting & Dynamic DNS",
+                fName: "Full Name *",
+                fEmail: "Email Address *",
+                fType: "Project Type",
+                opt1: "Cloud Migration (On-Prem to AWS/GCP)",
+                opt2: "DevOps & CI/CD Automation",
+                opt3: "Kubernetes / Microservices",
+                opt4: "Audit Security & Observability",
+                opt5: "Other / General Consulting",
+                fTime: "Time Horizon",
+                time1: "Immediate (< 1 month)",
+                time2: "1 - 3 months",
+                time3: "Planning phase",
+                fMsg: "Project Details Or Requirements *",
+                fBtn: "Send Request",
+                fNda: "Data confidentiality guaranteed (NDA available upon request).",
+                fbTitle: "Message Sent Successfully!",
+                fbDesc: "Thank you for your interest. VOLTRONET engineering team will review your requirements and contact you shortly.",
+                fbBtn: "Send Another Message",
+                ftCopy: "© 2026 VOLTRONET. All rights reserved.",
+                ftSub: "Enterprise Cloud Infrastructure & DevOps Solutions • Romania"
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+            }
+
+            let currentLang = 'ro';
+            const langBtn = document.getElementById('lang-switch');
+            const langBtnMob = document.getElementById('lang-switch-mob');
+            const langText = document.getElementById('lang-text');
+            const langTextMob = document.getElementById('lang-text-mob');
+
+            function toggleLanguage() {
+                currentLang = currentLang === 'ro' ? 'en' : 'ro';
+                const targetText = currentLang === 'ro' ? 'EN' : 'RO';
+                if (langText) langText.innerText = targetText;
+                if (langTextMob) langTextMob.innerText = targetText;
+                document.documentElement.setAttribute('lang', currentLang);
+
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (translations[currentLang][key]) {
+                        el.innerHTML = translations[currentLang][key];
+                    }
+                });
+            }
+
+            if (langBtn) langBtn.addEventListener('click', toggleLanguage);
+            if (langBtnMob) langBtnMob.addEventListener('click', toggleLanguage);
+
+            const tabButtons = document.querySelectorAll('.tech-tab-btn');
+            const techCards = document.querySelectorAll('.tech-card');
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabButtons.forEach(b => {
+                        b.classList.remove('active', 'bg-brand-cyan', 'text-brand-dark', 'font-bold');
+                        b.classList.add('glass-card', 'text-slate-300');
+                    });
+                    btn.classList.add('active', 'bg-brand-cyan', 'text-brand-dark', 'font-bold');
+                    btn.classList.remove('glass-card', 'text-slate-300');
+                    const category = btn.getAttribute('data-category');
+                    techCards.forEach(card => {
+                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            const contactForm = document.getElementById('contact-form');
+            const formFeedback = document.getElementById('form-feedback');
+            const resetFormBtn = document.getElementById('reset-form-btn');
+            if (contactForm && formFeedback) {
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    formFeedback.classList.remove('hidden');
+                });
+                resetFormBtn.addEventListener('click', () => {
+                    contactForm.reset();
+                    formFeedback.classList.add('hidden');
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
